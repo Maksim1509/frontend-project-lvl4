@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "bin": {
-    "slack": "dist/bin/slack.js"
+    "slack": "src/index.js"
   },
   "engines": {
     "node": ">= 13"
