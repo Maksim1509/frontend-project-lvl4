@@ -7,7 +7,7 @@ import React from 'react';
 //   ],
 //   currentChannelId: 1,
 //   messages: [],
-// }  
+// }
 
 export default class App extends React.Component {
   constructor(props) {
@@ -26,11 +26,12 @@ export default class App extends React.Component {
       return null;
     }
     return (
-      <ul className="list-group">
-        {channels.map(({ id, name }) => <li key={id} className="list-group-item col-md-4">{name}</li>)}
+      <ul className="list-group col-12 col-md-4">
+        {channels.map(({ id, name }) => <li key={id} className="list-group-item">{name}</li>)}
       </ul>
     );
   }
+
   render() {
     return this.renderChannels();
   }

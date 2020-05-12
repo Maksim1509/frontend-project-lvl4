@@ -1,1 +1,1 @@
-<a href="https://thawing-fortress-04345.herokuapp.com/">Сслыка на HEROKU</a>
+<a href="https://thawing-fortress-04345.herokuapp.com/">Сcылка на HEROKU</a>
