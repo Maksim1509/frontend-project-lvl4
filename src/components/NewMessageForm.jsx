@@ -25,9 +25,10 @@ const NewMessageForm = (props) => {
   const form = (
     <Formik
       initialValues={{ message: '' }}
-      onSubmit={(values) => {
+      onSubmit={(values, { resetForm }) => {
         console.log(values);
         handleSubmit(values);
+        resetForm({ values: '' });
       }}
     >
       <Form>
