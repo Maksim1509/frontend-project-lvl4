@@ -1,38 +1,24 @@
 import React from 'react';
+import ChatChannels from './ChatChannels';
+import NewMessageForm from './NewMessageForm';
+import ChatMessages from './ChatMessages';
 
-// {
-//   channels: [
-//     {id: 1, name: "general", removable: false},
-//     {id: 2, name: "random", removable: false},
-//   ],
-//   currentChannelId: 1,
-//   messages: [],
-// }
+const App = () => (
+  <div className="row h-100 pb-3">
+    <div className="col-3 border-right">
+      <div className="d-flex mb-2">
+        <span>Channels</span>
+        <button type="button" className="btn btn-link p-0 ml-auto">+</button>
+      </div>
+      <ChatChannels />
+    </div>
+    <div>
+      <ChatMessages />
+      <div className="col h-100">
+        <NewMessageForm />
+      </div>
+    </div>
+  </div>
+);
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    const { gon } = this.props;
-    this.state = {
-      channels: [...gon.channels],
-      currentChannelId: gon.currentChannelId,
-      messages: [...gon.messages],
-    };
-  }
-
-  renderChannels() {
-    const { channels } = this.state;
-    if (channels.length === 0) {
-      return null;
-    }
-    return (
-      <ul className="list-group col-12 col-md-4">
-        {channels.map(({ id, name }) => <li key={id} className="list-group-item">{name}</li>)}
-      </ul>
-    );
-  }
-
-  render() {
-    return this.renderChannels();
-  }
-}
+export default App;
