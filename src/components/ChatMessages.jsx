@@ -11,8 +11,13 @@ const ChatMessages = (props) => {
   const { messages } = props;
   console.log(messages);
   return (
-    <div>
-      {messages.map(({ message, id }) => <li key={id}>{message}</li>)}
+    <div className="chat-messages overflow-auto mb-3">
+      {messages.map(({ message, id, userName }) => (
+        <div key={id}>
+          <b>{userName}</b>
+          {`: ${message}`}
+        </div>
+      ))}
     </div>
   );
 };

@@ -11,9 +11,8 @@ const channels = handleActions({
 
 const messages = handleActions({
   [actions.sendingMessageSucces](state, { payload }) {
-    const { data: { attributes: { message, id } } } = payload;
-    console.log(payload);
-    return [...state, { message, id }];
+    const { data: { attributes: { message, id, userName } } } = payload;
+    return [...state, { message, id, userName }];
   },
 }, []);
 
