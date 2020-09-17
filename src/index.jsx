@@ -7,17 +7,16 @@ import 'bootstrap';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
+import io from 'socket.io-client';
 
 import '../assets/application.scss';
 import gon from 'gon';
 
 import App from './components/App.jsx';
 import rootReducer from './reducers';
+import { sendingMessageSucces } from './actions';
 
-// import faker from 'faker';
 // @ts-nocheck
-// import cookies from 'js-cookie';
-// import io from 'socket.io-client';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -25,9 +24,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 console.log('it works!');
 console.log('gon', gon);
-
+console.log(gon.currentChannelId);
 const preloadedState = {
   channels: gon.channels,
+  currentChannelId: gon.currentChannelId,
   messages: gon.messages,
 };
 
@@ -37,9 +37,16 @@ const store = configureStore({
   middleware: [thunk],
 });
 
+const socket = io();
+socket.on('newMessage', (data) => {
+  store.dispatch(sendingMessageSucces(data));
+});
+
 render(
   <Provider store={store}>
     <App />
   </Provider>,
   document.getElementById('chat'),
 );
+
+export default socket;

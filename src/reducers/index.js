@@ -9,6 +9,12 @@ const channels = handleActions({
   },
 }, []);
 
+const currentChannelId = handleActions({
+  [actions.changeChannel](state, { payload }) {
+    return payload.id;
+  },
+}, 1);
+
 const messages = handleActions({
   [actions.sendingMessageSucces](state, { payload }) {
     const { data: { attributes: { message, id, userName } } } = payload;
@@ -19,4 +25,5 @@ const messages = handleActions({
 export default combineReducers({
   channels,
   messages,
+  currentChannelId,
 });

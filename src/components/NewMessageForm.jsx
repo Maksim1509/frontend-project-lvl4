@@ -15,7 +15,6 @@ const mapStateToProps = (state) => {
 };
 
 class NewMessageForm extends React.Component {
-
   handleSubmit = async (messageText) => {
     const { sendingMessage, id } = this.props;
     try {

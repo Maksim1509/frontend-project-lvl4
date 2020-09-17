@@ -9,7 +9,7 @@ const mapStateToProps = (state) => {
 
 const ChatMessages = (props) => {
   const { messages } = props;
-  console.log(messages);
+
   return (
     <div className="chat-messages overflow-auto mb-3">
       {messages.map(({ message, id, userName }) => (
