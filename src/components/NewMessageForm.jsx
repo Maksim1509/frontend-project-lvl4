@@ -9,16 +9,16 @@ const actionCreators = {
 };
 
 const mapStateToProps = (state) => {
-  const { channels: { 0: { id } } } = state;
-  const props = { id };
+  const { currentChannelId } = state;
+  const props = { currentChannelId };
   return props;
 };
 
 class NewMessageForm extends React.Component {
   handleSubmit = async (messageText) => {
-    const { sendingMessage, id } = this.props;
+    const { sendingMessage, currentChannelId } = this.props;
     try {
-      await sendingMessage(id, messageText, this.context);
+      await sendingMessage(currentChannelId, messageText, this.context);
     } catch (e) {
       console.error(e);
     }

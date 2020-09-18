@@ -39,6 +39,7 @@ const store = configureStore({
 
 const socket = io();
 socket.on('newMessage', (data) => {
+  console.log(data);
   store.dispatch(sendingMessageSucces(data));
 });
 
