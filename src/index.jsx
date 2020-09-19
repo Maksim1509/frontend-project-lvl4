@@ -14,7 +14,7 @@ import gon from 'gon';
 
 import App from './components/App.jsx';
 import rootReducer from './reducers';
-import { sendingMessageSucces } from './actions';
+import { sendingMessageSucces, addChannel } from './actions';
 
 // @ts-nocheck
 
@@ -24,7 +24,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 console.log('it works!');
 console.log('gon', gon);
-console.log(gon.currentChannelId);
 const preloadedState = {
   channels: gon.channels,
   currentChannelId: gon.currentChannelId,
@@ -39,8 +38,11 @@ const store = configureStore({
 
 const socket = io();
 socket.on('newMessage', (data) => {
-  console.log(data);
   store.dispatch(sendingMessageSucces(data));
+});
+socket.on('newChannel', ({ data: { attributes } }) => {
+  console.log(attributes, 'socket channel');
+  store.dispatch(addChannel(attributes));
 });
 
 render(

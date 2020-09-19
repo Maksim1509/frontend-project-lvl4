@@ -4,7 +4,7 @@ import * as actions from '../actions';
 
 const channels = handleActions({
   [actions.addChannel](state, action) {
-    const newChannel = action.payload.channel;
+    const newChannel = action.payload;
     return [...state, newChannel];
   },
 }, []);

@@ -12,7 +12,6 @@ const mapStateToProps = (state) => {
 
 const ChatMessages = (props) => {
   const { currentChannelMessages } = props;
-  console.log(currentChannelMessages);
   return (
     <div className="chat-messages overflow-auto mb-3">
       {currentChannelMessages.map(({ message, id, userName }) => (

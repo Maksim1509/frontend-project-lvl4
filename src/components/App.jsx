@@ -7,13 +7,7 @@ import { UserNameContext, userName } from '../userName-context';
 const App = () => (
   <UserNameContext.Provider value={userName}>
     <div className="row h-100 pb-3">
-      <div className="col-3 border-right">
-        <div className="d-flex mb-2">
-          <span>Channels</span>
-          <button type="button" className="btn btn-link p-0 ml-auto">+</button>
-        </div>
-        <ChatChannels />
-      </div>
+      <ChatChannels />
       <div className="col h-100">
         <div className="d-flex flex-column h-100">
           <ChatMessages />

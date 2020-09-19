@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
+import { Modal } from 'react-bootstrap';
+import { Formik, Field, Form } from 'formik';
 import * as actions from '../actions';
 
 const mapStateToProps = (state) => {
@@ -9,15 +11,30 @@ const mapStateToProps = (state) => {
 };
 
 const actionCreators = {
-  addChannel: actions.addChannel,
+  addChannelRequest: actions.addChannelRequest,
   changeChannel: actions.changeChannel,
 };
 
 const ChatChannels = (props) => {
-  const { channels, currentChannelId, changeChannel } = props;
+  const {
+    channels,
+    currentChannelId,
+    changeChannel,
+    addChannelRequest,
+  } = props;
 
   const handleChangeChannel = (id) => () => {
     if (id !== currentChannelId) changeChannel({ id });
+  };
+
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleChannelAdd = ({ channelName }, { resetForm }) => {
+    addChannelRequest(channelName);
+    resetForm({ values: '' });
+    handleClose();
   };
 
   const getButtonClasses = (id) => cn({
@@ -27,10 +44,14 @@ const ChatChannels = (props) => {
     active: id === currentChannelId,
   });
 
+  const appendRemoveBtn = (removable) => (
+    removable ? <button type="button" className="btn btn-link ml-auto" onClick={handleShow}>x</button>
+      : null
+  );
   const channelsList = (
     <ul className="nav flex-column nav-pills nav-fill">
-      {channels.map(({ id, name }) => (
-        <li key={id} className="nav-item">
+      {channels.map(({ id, name, removable }) => (
+        <li key={id} className="nav-item" style={{ display: 'flex' }}>
           <button
             type="button"
             className={getButtonClasses(id)}
@@ -38,11 +59,49 @@ const ChatChannels = (props) => {
           >
             {name}
           </button>
+          {appendRemoveBtn(removable)}
         </li>
       ))}
     </ul>
   );
-  return channelsList;
+  return (
+    <>
+      <div className="col-3 border-right">
+        <div className="d-flex mb-2">
+          <span>Channels</span>
+          <button type="button" className="btn btn-link p-0 ml-auto" onClick={handleShow}>+</button>
+        </div>
+        {channelsList}
+      </div>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add new channel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            initialValues={{ channelName: '' }}
+            onSubmit={handleChannelAdd}
+          >
+            <Form>
+              <Field
+                id="channelName"
+                name="channelName"
+                className="form-control"
+              />
+              <Modal.Footer>
+                <button type="submit" className="btn btn-primary">Add</button>
+              </Modal.Footer>
+            </Form>
+          </Formik>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
 };
 
 export default connect(mapStateToProps, actionCreators)(ChatChannels);
