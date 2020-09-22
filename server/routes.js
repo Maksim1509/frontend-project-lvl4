@@ -85,7 +85,6 @@ export default (app, io, defaultState = {}) => {
     .patch('/api/v1/channels/:id', (req, reply) => {
       const channelId = Number(req.params.id);
       const channel = state.channels.find((c) => c.id === channelId);
-
       const { data: { attributes } } = req.body;
       channel.name = attributes.name;
 

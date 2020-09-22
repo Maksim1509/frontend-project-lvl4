@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
-import { Modal } from 'react-bootstrap';
-import { Formik, Field, Form } from 'formik';
 import * as actions from '../actions';
+import Add from './modals/Add';
+import Remove from './modals/Remove';
+import Rename from './modals/Rename';
 
 const mapStateToProps = (state) => {
   const { channels, currentChannelId } = state;
@@ -11,7 +12,9 @@ const mapStateToProps = (state) => {
 };
 
 const actionCreators = {
-  addChannelRequest: actions.addChannelRequest,
+  modalAddEnable: actions.modalAddEnable,
+  modalRemoveEnable: actions.modalRemoveEnable,
+  modalRenameEnable: actions.modalRenameEnable,
   changeChannel: actions.changeChannel,
 };
 
@@ -20,21 +23,20 @@ const ChatChannels = (props) => {
     channels,
     currentChannelId,
     changeChannel,
-    addChannelRequest,
+    modalAddEnable,
+    modalRemoveEnable,
+    modalRenameEnable,
   } = props;
 
   const handleChangeChannel = (id) => () => {
     if (id !== currentChannelId) changeChannel({ id });
   };
 
-  const [show, setShow] = React.useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const handleChannelAdd = ({ channelName }, { resetForm }) => {
-    addChannelRequest(channelName);
-    resetForm({ values: '' });
-    handleClose();
+  const handleRemoveChannel = (id) => () => {
+    modalRemoveEnable({ id });
+  };
+  const handleRenameChannel = (id) => () => {
+    modalRenameEnable({ id });
   };
 
   const getButtonClasses = (id) => cn({
@@ -44,8 +46,14 @@ const ChatChannels = (props) => {
     active: id === currentChannelId,
   });
 
-  const appendRemoveBtn = (removable) => (
-    removable ? <button type="button" className="btn btn-link ml-auto" onClick={handleShow}>x</button>
+  const appendRemoveBtn = (id, removable) => (
+    removable
+      ? (
+        <>
+          <button type="button" className="btn btn-link ml-auto" value={id} onClick={handleRemoveChannel(id)}>x</button>
+          <button type="button" className="btn btn-primary ml-auto" value={id} onClick={handleRenameChannel(id)}>rename</button>
+        </>
+      )
       : null
   );
   const channelsList = (
@@ -59,7 +67,7 @@ const ChatChannels = (props) => {
           >
             {name}
           </button>
-          {appendRemoveBtn(removable)}
+          {appendRemoveBtn(id, removable)}
         </li>
       ))}
     </ul>
@@ -69,37 +77,13 @@ const ChatChannels = (props) => {
       <div className="col-3 border-right">
         <div className="d-flex mb-2">
           <span>Channels</span>
-          <button type="button" className="btn btn-link p-0 ml-auto" onClick={handleShow}>+</button>
+          <button type="button" className="btn btn-link p-0 ml-auto" onClick={modalAddEnable}>+</button>
         </div>
         {channelsList}
       </div>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Add new channel</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Formik
-            initialValues={{ channelName: '' }}
-            onSubmit={handleChannelAdd}
-          >
-            <Form>
-              <Field
-                id="channelName"
-                name="channelName"
-                className="form-control"
-              />
-              <Modal.Footer>
-                <button type="submit" className="btn btn-primary">Add</button>
-              </Modal.Footer>
-            </Form>
-          </Formik>
-        </Modal.Body>
-      </Modal>
+      <Add />
+      <Remove />
+      <Rename />
     </>
   );
 };

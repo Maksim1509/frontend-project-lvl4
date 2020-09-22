@@ -14,7 +14,7 @@ import gon from 'gon';
 
 import App from './components/App.jsx';
 import rootReducer from './reducers';
-import { sendingMessageSucces, addChannel } from './actions';
+import { sendingMessageSucces, addChannel, removeChannelSucces, renameChannelSucces } from './actions';
 
 // @ts-nocheck
 
@@ -41,8 +41,13 @@ socket.on('newMessage', (data) => {
   store.dispatch(sendingMessageSucces(data));
 });
 socket.on('newChannel', ({ data: { attributes } }) => {
-  console.log(attributes, 'socket channel');
   store.dispatch(addChannel(attributes));
+});
+socket.on('removeChannel', ({ data: { id } }) => {
+  store.dispatch(removeChannelSucces({ id }));
+});
+socket.on('renameChannel', (data) => {
+  store.dispatch(renameChannelSucces(data));
 });
 
 render(
