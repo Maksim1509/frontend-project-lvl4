@@ -6,20 +6,7 @@ import ChatMessages from './ChatMessages';
 import { UserNameContext, userName } from '../userName-context';
 
 const App = () => {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     rollbar: new Rollbar({
-  //       accessToken: 'ebb2df6bc2b84f66b05a056a064cc5c5',
-  //       captureUncaught: true,
-  //       captureUnhandledRejections: true,
-  //     }),
-  //   };
-  //   this.logInfo = this.logInfo.bind(this);
-  //   this.throwError = this.throwError.bind(this);
-  // }
-
-  const [rollbar] = React.useState({
+  React.useState({
     rollbar: new Rollbar({
       accessToken: 'ebb2df6bc2b84f66b05a056a064cc5c5',
       captureUncaught: true,

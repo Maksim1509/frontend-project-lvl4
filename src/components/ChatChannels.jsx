@@ -30,6 +30,7 @@ const ChatChannels = (props) => {
 
   const handleChangeChannel = (id) => () => {
     if (id !== currentChannelId) changeChannel({ id });
+    throw new Error('1111');
   };
 
   const handleRemoveChannel = (id) => () => {
