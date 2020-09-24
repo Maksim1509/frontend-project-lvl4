@@ -14,7 +14,12 @@ import gon from 'gon';
 
 import App from './components/App.jsx';
 import rootReducer from './reducers';
-import { sendingMessageSucces, addChannel, removeChannelSucces, renameChannelSucces } from './actions';
+import {
+  sendingMessageSucces,
+  addChannel,
+  removeChannelSucces,
+  renameChannelSucces,
+} from './actions';
 
 // @ts-nocheck
 
@@ -24,6 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 console.log('it works!');
 console.log('gon', gon);
+
 const preloadedState = {
   channels: gon.channels,
   currentChannelId: gon.currentChannelId,

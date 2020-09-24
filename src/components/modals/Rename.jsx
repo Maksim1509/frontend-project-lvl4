@@ -2,7 +2,19 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
+import cn from 'classnames';
 import * as actions from '../../actions';
+
+const spiner = (
+  <div className="spinner-border spinner-border-sm text-primary" role="status">
+    <span className="sr-only">Loading...</span>
+  </div>
+);
+
+const getFieldClasses = ({ channelName }) => cn({
+  'form-control': true,
+  'is-invalid': !!channelName,
+});
 
 const mapStateToProps = (state) => {
   const { modalsUIState } = state;
@@ -15,12 +27,24 @@ const actionCreators = {
   renameChannel: actions.renameChannel,
 };
 
+const validate = ({ channelName }) => {
+  const errors = {};
+  if (!channelName) {
+    errors.channelName = 'Required';
+  }
+  return errors;
+};
+
 const Rename = (props) => {
   const { modalsDisable, modalsUIState, renameChannel } = props;
-  const handleChannelRename = ({ channelName }, { resetForm }) => {
-    modalsDisable();
-    renameChannel(modalsUIState.id, channelName);
-    resetForm({ values: '' });
+  const handleChannelRename = async ({ channelName }, { resetForm, setErrors }) => {
+    try {
+      await renameChannel(modalsUIState.id, channelName);
+      modalsDisable();
+      resetForm({ values: '' });
+    } catch (e) {
+      setErrors({ channelName: e.message });
+    }
   };
 
   const modal = (
@@ -30,17 +54,23 @@ const Rename = (props) => {
       </Modal.Header>
       <Modal.Body>
         <Formik
+          validate={validate}
           initialValues={{ channelName: '' }}
           onSubmit={handleChannelRename}
         >
-          <Form>
-            <Field
-              id="channelName"
-              name="channelName"
-              className="form-control"
-            />
-            <button type="submit" className="btn btn-primary">Rename</button>
-          </Form>
+          {({ isSubmitting, errors }) => (
+            <Form>
+              <Field
+                id="channelName"
+                name="channelName"
+                className={getFieldClasses(errors)}
+                onlyRead={isSubmitting}
+              />
+              {!!errors.channelName && <div className="invalid-feedback">{errors.channelName}</div>}
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Rename</button>
+              {isSubmitting && spiner}
+            </Form>
+          )}
         </Formik>
       </Modal.Body>
       <Modal.Footer>
