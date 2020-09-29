@@ -1,21 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
-import * as actions from '../actions';
+// import * as actions from '../actions';
 import Add from './modals/Add';
 import Remove from './modals/Remove';
 import Rename from './modals/Rename';
+import { actions } from '../slices';
 
 const mapStateToProps = (state) => {
-  const { channels, currentChannelId } = state;
+  const { channelInfo: { channels, currentChannelId } } = state;
   return { channels, currentChannelId };
 };
 
 const actionCreators = {
-  modalAddEnable: actions.modalAddEnable,
-  modalRemoveEnable: actions.modalRemoveEnable,
-  modalRenameEnable: actions.modalRenameEnable,
   changeChannel: actions.changeChannel,
+  modalOpen: actions.modalOpen,
 };
 
 const ChatChannels = (props) => {
@@ -23,21 +22,22 @@ const ChatChannels = (props) => {
     channels,
     currentChannelId,
     changeChannel,
-    modalAddEnable,
-    modalRemoveEnable,
-    modalRenameEnable,
+    modalOpen,
   } = props;
 
   const handleChangeChannel = (id) => () => {
-    if (id !== currentChannelId) changeChannel({ id });
-    throw new Error('1111');
+    if (id !== currentChannelId) {
+      changeChannel({ id });
+    }
   };
 
+  const handleModalOpen = (type, extra = {}) => () => modalOpen({ type, extra });
+
   const handleRemoveChannel = (id) => () => {
-    modalRemoveEnable({ id });
+    modalOpen({ type: 'removeChannel', extra: { id } });
   };
   const handleRenameChannel = (id) => () => {
-    modalRenameEnable({ id });
+    modalOpen({ type: 'renameChannel', extra: { id } });
   };
 
   const getButtonClasses = (id) => cn({
@@ -90,7 +90,7 @@ const ChatChannels = (props) => {
       <div className="col-3 border-right">
         <div className="d-flex mb-2">
           <span>Channels</span>
-          <button type="button" className="btn btn-link p-0 ml-auto" onClick={modalAddEnable}>+</button>
+          <button type="button" className="btn btn-link p-0 ml-auto" onClick={handleModalOpen('addChannel')}>+</button>
         </div>
         {channelsList}
       </div>

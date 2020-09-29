@@ -3,7 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import cn from 'classnames';
-import * as actions from '../../actions';
+import { actions, asyncActions } from '../../slices';
 
 const spiner = (
   <div className="spinner-border spinner-border-sm text-primary" role="status">
@@ -17,14 +17,13 @@ const getFieldClasses = ({ channelName }) => cn({
 });
 
 const mapStateToProps = (state) => {
-  const { modalsUIState } = state;
-  const props = { modalsUIState };
+  const { modal } = state;
+  const props = { modal };
   return props;
 };
 
 const actionCreators = {
-  modalsDisable: actions.modalsDisable,
-  renameChannel: actions.renameChannel,
+  modalClose: actions.modalClose,
 };
 
 const validate = ({ channelName }) => {
@@ -36,19 +35,24 @@ const validate = ({ channelName }) => {
 };
 
 const Rename = (props) => {
-  const { modalsDisable, modalsUIState, renameChannel } = props;
-  const handleChannelRename = async ({ channelName }, { resetForm, setErrors }) => {
+  const { modalClose, modal } = props;
+  const { useChannelActions } = asyncActions;
+  const { renameChannelRequest } = useChannelActions();
+
+  const handleModalClose = () => modalClose();
+
+  const handleRenameChannel = async ({ channelName }, { resetForm, setErrors }) => {
     try {
-      await renameChannel(modalsUIState.id, channelName);
-      modalsDisable();
+      await renameChannelRequest(modal.extra.id, channelName);
+      modalClose();
       resetForm({ values: '' });
     } catch (e) {
       setErrors({ channelName: e.message });
     }
   };
 
-  const modal = (
-    <Modal show={modalsUIState.state === 'rename'} onHide={modalsDisable}>
+  return (
+    <Modal show={modal.type === 'renameChannel'} onHide={modalClose}>
       <Modal.Header closeButton>
         <Modal.Title>Rename this channel</Modal.Title>
       </Modal.Header>
@@ -56,7 +60,7 @@ const Rename = (props) => {
         <Formik
           validate={validate}
           initialValues={{ channelName: '' }}
-          onSubmit={handleChannelRename}
+          onSubmit={handleRenameChannel}
         >
           {({ isSubmitting, errors }) => (
             <Form>
@@ -64,7 +68,7 @@ const Rename = (props) => {
                 id="channelName"
                 name="channelName"
                 className={getFieldClasses(errors)}
-                onlyRead={isSubmitting}
+                readOnly={isSubmitting}
               />
               {!!errors.channelName && <div className="invalid-feedback">{errors.channelName}</div>}
               <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Rename</button>
@@ -74,11 +78,10 @@ const Rename = (props) => {
         </Formik>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={modalsDisable}>Close</Button>
+        <Button variant="secondary" onClick={handleModalClose}>Close</Button>
       </Modal.Footer>
     </Modal>
   );
-  return modal;
 };
 
 export default connect(mapStateToProps, actionCreators)(Rename);

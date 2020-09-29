@@ -1,18 +1,16 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import { actions, asyncActions } from '../../slices';
 
 const mapStateToProps = (state) => {
-  const { modalsUIState } = state;
-  const props = { modalsUIState };
+  const { modal } = state;
+  const props = { modal };
   return props;
 };
 
 const actionCreators = {
-  addChannelRequest: actions.addChannelRequest,
-  modalsDisable: actions.modalsDisable,
-  removeChannel: actions.removeChannel,
+  modalClose: actions.modalClose,
 };
 
 const spiner = (
@@ -22,22 +20,26 @@ const spiner = (
 );
 
 const Remove = (props) => {
-  const { modalsUIState, modalsDisable, removeChannel } = props;
+  const { modal, modalClose } = props;
   const [error, setError] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
+
+  const { useChannelActions } = asyncActions;
+  const { removeChannelRequest } = useChannelActions();
+
   const handleRemoveChannel = async () => {
     try {
       setSubmitting(true);
-      await removeChannel(modalsUIState.id);
+      await removeChannelRequest(modal.extra.id);
       setSubmitting(false);
-      modalsDisable();
+      modalClose();
     } catch (e) {
       setError(e.message);
     }
   };
 
-  const modal = (
-    <Modal show={modalsUIState.state === 'remove'} onHide={modalsDisable}>
+  return (
+    <Modal show={modal.type === 'removeChannel'} onHide={modalClose}>
       <Modal.Header closeButton>
         <Modal.Title>Remove this channel?</Modal.Title>
       </Modal.Header>
@@ -48,7 +50,6 @@ const Remove = (props) => {
       </Modal.Footer>
     </Modal>
   );
-  return modal;
 };
 
 export default connect(mapStateToProps, actionCreators)(Remove);

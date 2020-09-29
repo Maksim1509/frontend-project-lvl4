@@ -1,17 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import { Formik, Field, Form } from 'formik';
 import cn from 'classnames';
-import * as actions from '../actions';
 import { UserNameContext } from '../userName-context';
-
-const actionCreators = {
-  sendingMessageRequest: actions.sendingMessageRequest,
-  sendingMessage: actions.sendingMessage,
-};
+import { asyncActions } from '../slices';
 
 const mapStateToProps = (state) => {
-  const { currentChannelId } = state;
+  const { channelInfo: { currentChannelId } } = state;
   const props = { currentChannelId };
   return props;
 };
@@ -31,47 +26,47 @@ const getFieldClasses = ({ message }) => cn({
   'is-invalid': !!message,
 });
 
-class NewMessageForm extends React.Component {
-  render() {
-    const { sendingMessage, currentChannelId } = this.props;
-    const form = (
-      <Formik
-        validate={validate}
-        initialValues={{ message: '' }}
-        onSubmit={async (values, { resetForm, setErrors }) => {
-          try {
-            await sendingMessage(currentChannelId, values, this.context);
-            resetForm({ values: '' });
-          } catch (e) {
-            setErrors({ message: e.message });
-          }
-        }}
-      >
-        {({ isSubmitting, errors }) => (
-          <Form className="d-flex flex-wrap">
-            <Field
-              type="text"
-              id="message"
-              name="message"
-              className={getFieldClasses(errors)}
-              readOnly={isSubmitting}
-            />
-            {isSubmitting ? (
-              <button className="btn btn-primary" type="button" disabled>
-                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
-                Sending...
-              </button>
-            ) : <button className="btn btn-primary" type="submit">Send</button>}
-            {errors.message ? <div className="invalid-feedback">{errors.message}</div>
-              : null}
-          </Form>
-        )}
-      </Formik>
-    );
-    return form;
-  }
-}
+const NewMessageForm = (props) => {
+  const userName = useContext(UserNameContext);
 
-NewMessageForm.contextType = UserNameContext;
+  const { useSendMessageActions } = asyncActions;
+  const { sendMessage } = useSendMessageActions();
+  const { currentChannelId } = props;
+  const form = (
+    <Formik
+      validate={validate}
+      initialValues={{ message: '' }}
+      onSubmit={({ message }, { resetForm, setErrors }) => {
+        try {
+          sendMessage({ currentChannelId, message, userName });
+          resetForm({ values: '' });
+        } catch (e) {
+          setErrors({ message: e.message });
+        }
+      }}
+    >
+      {({ isSubmitting, errors }) => (
+        <Form className="d-flex flex-wrap">
+          <Field
+            type="text"
+            id="message"
+            name="message"
+            className={getFieldClasses(errors)}
+            readOnly={isSubmitting}
+          />
+          {isSubmitting ? (
+            <button className="btn btn-primary" type="button" disabled>
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+              Sending...
+            </button>
+          ) : <button className="btn btn-primary" type="submit">Send</button>}
+          {errors.message ? <div className="invalid-feedback">{errors.message}</div>
+            : null}
+        </Form>
+      )}
+    </Formik>
+  );
+  return form;
+};
 
-export default connect(mapStateToProps, actionCreators)(NewMessageForm);
+export default connect(mapStateToProps)(NewMessageForm);

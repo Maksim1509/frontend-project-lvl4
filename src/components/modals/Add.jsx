@@ -3,17 +3,17 @@ import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import cn from 'classnames';
-import * as actions from '../../actions';
+import { actions, asyncActions } from '../../slices';
 
 const mapStateToProps = (state) => {
-  const { modalsUIState } = state;
-  const props = { modalsUIState };
+  const { modal } = state;
+  const props = { modal };
   return props;
 };
 
 const actionCreators = {
-  addChannelRequest: actions.addChannelRequest,
-  modalsDisable: actions.modalsDisable,
+  addChannel: actions.addChannel,
+  modalClose: actions.modalClose,
 };
 
 const validate = ({ channelName }) => {
@@ -33,20 +33,25 @@ const getFieldClasses = ({ channelName }) => cn({
   'form-control': true,
   'is-invalid': !!channelName,
 });
+
 const Add = (props) => {
-  const { addChannelRequest, modalsDisable, modalsUIState } = props;
-  const handleChannelAdd = async ({ channelName }, { resetForm, setErrors }) => {
+  const { modalClose, modal } = props;
+  const { useChannelActions } = asyncActions;
+  const { addChannelRequest } = useChannelActions();
+
+  const handleAddChannel = async ({ channelName }, { resetForm, setErrors }) => {
     try {
       await addChannelRequest(channelName);
-      modalsDisable();
+      modalClose();
       resetForm({ values: '' });
     } catch (e) {
       setErrors({ channelName: e.message });
     }
   };
-  const disableModals = () => modalsDisable();
-  const modal = (
-    <Modal show={modalsUIState === 'add'} onHide={modalsDisable}>
+  const handleModalClose = () => modalClose();
+
+  return (
+    <Modal show={modal.type === 'addChannel'} onHide={modalClose}>
       <Modal.Header closeButton>
         <Modal.Title>Add new channel</Modal.Title>
       </Modal.Header>
@@ -54,7 +59,7 @@ const Add = (props) => {
         <Formik
           validate={validate}
           initialValues={{ channelName: '' }}
-          onSubmit={handleChannelAdd}
+          onSubmit={handleAddChannel}
         >
           {({ isSubmitting, errors }) => (
             <Form>
@@ -72,11 +77,10 @@ const Add = (props) => {
         </Formik>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={disableModals}>Close</Button>
+        <Button variant="secondary" onClick={handleModalClose}>Close</Button>
       </Modal.Footer>
     </Modal>
   );
-  return modal;
 };
 
 export default connect(mapStateToProps, actionCreators)(Add);

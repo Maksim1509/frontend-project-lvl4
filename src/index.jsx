@@ -2,24 +2,15 @@ import React from 'react';
 import { render } from 'react-dom';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import 'bootstrap';
-
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
 import io from 'socket.io-client';
-
-import '../assets/application.scss';
 import gon from 'gon';
-
+import 'bootstrap';
+import '../assets/application.scss';
 import App from './components/App.jsx';
-import rootReducer from './reducers';
-import {
-  sendingMessageSucces,
-  addChannel,
-  removeChannelSucces,
-  renameChannelSucces,
-} from './actions';
+import reducer, { actions } from './slices';
+import { userName, UserNameContext } from './userName-context';
 
 // @ts-nocheck
 
@@ -27,40 +18,40 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-console.log('it works!');
-console.log('gon', gon);
-
 const preloadedState = {
-  channels: gon.channels,
-  currentChannelId: gon.currentChannelId,
-  messages: gon.messages,
+  channelInfo: {
+    channels: gon.channels,
+    currentChannelId: gon.currentChannelId,
+  },
+  messagesInfo: {
+    messages: gon.messages,
+  },
 };
 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer,
   preloadedState,
-  middleware: [thunk],
 });
 
 const socket = io();
 socket.on('newMessage', (data) => {
-  store.dispatch(sendingMessageSucces(data));
+  store.dispatch(actions.addMessage(data));
 });
 socket.on('newChannel', ({ data: { attributes } }) => {
-  store.dispatch(addChannel(attributes));
+  store.dispatch(actions.addChannel(attributes));
 });
 socket.on('removeChannel', ({ data: { id } }) => {
-  store.dispatch(removeChannelSucces({ id }));
+  store.dispatch(actions.removeChannel({ id }));
 });
 socket.on('renameChannel', (data) => {
-  store.dispatch(renameChannelSucces(data));
+  store.dispatch(actions.renameChannel(data));
 });
 
 render(
   <Provider store={store}>
-    <App />
+    <UserNameContext.Provider value={userName}>
+      <App />
+    </UserNameContext.Provider>
   </Provider>,
   document.getElementById('chat'),
 );
-
-export default socket;
