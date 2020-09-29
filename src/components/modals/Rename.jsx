@@ -4,12 +4,8 @@ import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import { actions, asyncActions } from '../../slices';
-
-const spiner = (
-  <div className="spinner-border spinner-border-sm text-primary" role="status">
-    <span className="sr-only">Loading...</span>
-  </div>
-);
+import validate from './validate';
+import { spiner } from '../utils';
 
 const getFieldClasses = ({ channelName }) => cn({
   'form-control': true,
@@ -24,14 +20,6 @@ const mapStateToProps = (state) => {
 
 const actionCreators = {
   modalClose: actions.modalClose,
-};
-
-const validate = ({ channelName }) => {
-  const errors = {};
-  if (!channelName) {
-    errors.channelName = 'Required';
-  }
-  return errors;
 };
 
 const Rename = (props) => {

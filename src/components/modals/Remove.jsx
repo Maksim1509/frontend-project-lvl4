@@ -2,22 +2,13 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { actions, asyncActions } from '../../slices';
+import { spiner } from '../utils';
 
-const mapStateToProps = (state) => {
-  const { modal } = state;
-  const props = { modal };
-  return props;
-};
+const mapStateToProps = ({ modal }) => ({ modal });
 
 const actionCreators = {
   modalClose: actions.modalClose,
 };
-
-const spiner = (
-  <div className="spinner-border text-danger" role="status">
-    <span className="sr-only">Loading...</span>
-  </div>
-);
 
 const Remove = (props) => {
   const { modal, modalClose } = props;
