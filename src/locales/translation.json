@@ -1,0 +1,13 @@
+{
+   "channels": "Channels",
+   "Required": "This is required field",
+   "Network Error": "Network error, check your internet connection and try again",
+   "send": "SEND",
+   "add": "ADD",
+   "addTitle": "Add new channel",
+   "close": "CLOSE",
+   "renameTitle": "Rename this Channel ?",
+   "rename": "RENAME",
+   "removeTitle": "Remove this channel ?",
+   "remove": "REMOVE"
+}

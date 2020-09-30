@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { actions, asyncActions } from '../../slices';
@@ -11,6 +12,7 @@ const actionCreators = {
 };
 
 const Remove = (props) => {
+  const { t } = useTranslation();
   const { modal, modalClose } = props;
   const [error, setError] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
@@ -32,12 +34,12 @@ const Remove = (props) => {
   return (
     <Modal show={modal.type === 'removeChannel'} onHide={modalClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Remove this channel?</Modal.Title>
+        <Modal.Title>{t('removeTitle')}</Modal.Title>
       </Modal.Header>
       <Modal.Footer className="d-block">
-        <Button variant="danger" disabled={isSubmitting} onClick={handleRemoveChannel}>Remove</Button>
+        <Button variant="danger" disabled={isSubmitting} onClick={handleRemoveChannel}>{t('remove')}</Button>
         {isSubmitting && spiner}
-        {!!error && <div className="text-danger">{error}</div>}
+        {!!error && <div className="text-danger">{t(error)}</div>}
       </Modal.Footer>
     </Modal>
   );

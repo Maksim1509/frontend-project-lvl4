@@ -8,6 +8,7 @@ import io from 'socket.io-client';
 import gon from 'gon';
 import 'bootstrap';
 import '../assets/application.scss';
+import './lib/i18n';
 import App from './components/App.jsx';
 import reducer, { actions } from './slices';
 import { userName, UserNameContext } from './userName-context';

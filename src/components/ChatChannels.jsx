@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
 import Add from './modals/Add';
 import Remove from './modals/Remove';
@@ -18,6 +19,7 @@ const actionCreators = {
 };
 
 const ChatChannels = (props) => {
+  const { t } = useTranslation();
   const {
     channels,
     currentChannelId,
@@ -83,7 +85,7 @@ const ChatChannels = (props) => {
     <>
       <div className="col-3 border-right">
         <div className="d-flex mb-2">
-          <span>Channels</span>
+          <span>{t('channels')}</span>
           <button type="button" className="btn btn-link p-0 ml-auto" onClick={handleModalOpen('addChannel')}>
             +
           </button>

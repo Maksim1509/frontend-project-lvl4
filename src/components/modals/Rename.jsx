@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
@@ -23,6 +24,7 @@ const actionCreators = {
 };
 
 const Rename = (props) => {
+  const { t } = useTranslation();
   const { modalClose, modal } = props;
   const { useChannelActions } = asyncActions;
   const { renameChannelRequest } = useChannelActions();
@@ -42,7 +44,7 @@ const Rename = (props) => {
   return (
     <Modal show={modal.type === 'renameChannel'} onHide={modalClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Rename this channel</Modal.Title>
+        <Modal.Title>{t('renameTitle')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
@@ -58,8 +60,8 @@ const Rename = (props) => {
                 className={getFieldClasses(errors)}
                 readOnly={isSubmitting}
               />
-              {!!errors.channelName && <div className="invalid-feedback">{errors.channelName}</div>}
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Rename</button>
+              {!!errors.channelName && <div className="invalid-feedback">{t(errors.channelName)}</div>}
+              <button type="submit" className="btn btn-primary mt-2" disabled={isSubmitting}>{t('rename')}</button>
               {isSubmitting && spiner}
             </Form>
           )}

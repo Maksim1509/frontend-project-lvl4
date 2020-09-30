@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
 import { actions, asyncActions } from '../../slices';
 import validate from './validate';
@@ -24,6 +25,7 @@ const getFieldClasses = ({ channelName }) => cn({
 });
 
 const Add = (props) => {
+  const { t } = useTranslation();
   const { modalClose, modal } = props;
   const { useChannelActions } = asyncActions;
   const { addChannelRequest } = useChannelActions();
@@ -42,7 +44,7 @@ const Add = (props) => {
   return (
     <Modal show={modal.type === 'addChannel'} onHide={modalClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Add new channel</Modal.Title>
+        <Modal.Title>{t('addTitle')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
@@ -58,15 +60,15 @@ const Add = (props) => {
                 className={getFieldClasses(errors)}
                 readOnly={isSubmitting}
               />
-              {!!errors.channelName && <div className="invalid-feedback">{errors.channelName}</div>}
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Add</button>
+              {!!errors.channelName && <div className="invalid-feedback">{t(errors.channelName)}</div>}
+              <button type="submit" className="btn btn-primary mt-3" disabled={isSubmitting}>{t('add')}</button>
               {isSubmitting && spiner}
             </Form>
           )}
         </Formik>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleModalClose}>Close</Button>
+        <Button variant="secondary" onClick={handleModalClose}>{t('close')}</Button>
       </Modal.Footer>
     </Modal>
   );
