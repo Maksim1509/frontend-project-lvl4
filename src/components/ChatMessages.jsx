@@ -1,20 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+// import { connect } from 'react-redux';
+import connect from '../connect';
 
-const mapStateToProps = (state) => {
-  const { messagesInfo: { messages }, channelInfo: { currentChannelId } } = state;
-  const currentChannelMessages = messages.filter(
-    ({ channelId }) => channelId === currentChannelId,
-  );
-  const props = { currentChannelMessages, currentChannelId };
-  return props;
-};
-
-const ChatMessages = (props) => {
-  const { currentChannelMessages } = props;
+const ChatMessages = () => {
+  const сhannelMessages = useSelector((state) => {
+    const { messagesInfo: { messages }, channelInfo: { currentChannelId } } = state;
+    return messages.filter(
+      ({ channelId }) => channelId === currentChannelId,
+    );
+  });
   return (
     <div className="chat-messages overflow-auto mb-3">
-      {currentChannelMessages.map(({ message, id, userName }) => (
+      {сhannelMessages.map(({ message, id, userName }) => (
         <div key={id}>
           <b>{userName}</b>
           {`: ${message}`}
@@ -24,4 +22,4 @@ const ChatMessages = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(ChatMessages);
+export default connect()(ChatMessages);

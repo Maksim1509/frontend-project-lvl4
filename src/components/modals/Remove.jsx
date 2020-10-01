@@ -1,19 +1,15 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { actions, asyncActions } from '../../slices';
+import connect from '../../connect';
+import { asyncActions } from '../../slices';
 import { spiner } from '../utils';
-
-const mapStateToProps = ({ modal }) => ({ modal });
-
-const actionCreators = {
-  modalClose: actions.modalClose,
-};
 
 const Remove = (props) => {
   const { t } = useTranslation();
-  const { modal, modalClose } = props;
+  const { modal } = useSelector((state) => state);
+  const { modalClose } = props;
   const [isSubmitting, setSubmitting] = React.useState(false);
 
   const { useChannelActions } = asyncActions;
@@ -39,4 +35,4 @@ const Remove = (props) => {
   );
 };
 
-export default connect(mapStateToProps, actionCreators)(Remove);
+export default connect()(Remove);

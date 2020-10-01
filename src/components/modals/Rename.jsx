@@ -1,10 +1,11 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
-import { connect } from 'react-redux';
 import cn from 'classnames';
-import { actions, asyncActions } from '../../slices';
+import connect from '../../connect';
+import { asyncActions } from '../../slices';
 import validate from './validate';
 import { spiner } from '../utils';
 
@@ -13,19 +14,10 @@ const getFieldClasses = ({ channelName }) => cn({
   'is-invalid': !!channelName,
 });
 
-const mapStateToProps = (state) => {
-  const { modal } = state;
-  const props = { modal };
-  return props;
-};
-
-const actionCreators = {
-  modalClose: actions.modalClose,
-};
-
 const Rename = (props) => {
   const { t } = useTranslation();
-  const { modalClose, modal } = props;
+  const { modal } = useSelector((state) => state);
+  const { modalClose } = props;
   const { useChannelActions } = asyncActions;
   const { renameChannelRequest } = useChannelActions();
 
@@ -70,4 +62,4 @@ const Rename = (props) => {
   );
 };
 
-export default connect(mapStateToProps, actionCreators)(Rename);
+export default connect()(Rename);

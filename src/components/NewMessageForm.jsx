@@ -1,16 +1,11 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Formik, Field, Form } from 'formik';
 import cn from 'classnames';
 import { UserNameContext } from '../userName-context';
 import { asyncActions } from '../slices';
-
-const mapStateToProps = (state) => {
-  const { channelInfo: { currentChannelId } } = state;
-  const props = { currentChannelId };
-  return props;
-};
+import connect from '../connect';
 
 const validate = (values) => {
   const errors = {};
@@ -27,13 +22,13 @@ const getFieldClasses = ({ message }) => cn({
   'is-invalid': !!message,
 });
 
-const NewMessageForm = (props) => {
+const NewMessageForm = () => {
   const userName = useContext(UserNameContext);
   const { t } = useTranslation();
 
   const { useSendMessageActions } = asyncActions;
   const { sendMessage } = useSendMessageActions();
-  const { currentChannelId } = props;
+  const { channelInfo: { currentChannelId } } = useSelector((state) => state);
 
   const handleSendMessage = async ({ message }, { resetForm }) => {
     await sendMessage({ currentChannelId, message, userName });
@@ -69,4 +64,4 @@ const NewMessageForm = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(NewMessageForm);
+export default connect()(NewMessageForm);

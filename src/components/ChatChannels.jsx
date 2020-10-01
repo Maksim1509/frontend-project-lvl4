@@ -1,31 +1,37 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
 import Add from './modals/Add';
 import Remove from './modals/Remove';
 import Rename from './modals/Rename';
-import { actions } from '../slices';
+import connect from '../connect';
 import { editIcon, removeIcon } from './utils';
 
-const mapStateToProps = (state) => {
-  const { channelInfo: { channels, currentChannelId } } = state;
-  return { channels, currentChannelId };
-};
+const renderChannelBtns = (id, renameFunc, removeFunc) => (
+  <>
+    <button type="button" className="btn btn-link p-1" value={id} onClick={renameFunc(id)}>
+      {editIcon}
+    </button>
+    <button type="button" className="btn btn-link ml-auto p-1" value={id} onClick={removeFunc(id)}>
+      {removeIcon}
+    </button>
+  </>
+);
 
-const actionCreators = {
-  changeChannel: actions.changeChannel,
-  modalOpen: actions.modalOpen,
-};
+const getButtonClasses = (id, currentChannelId) => cn({
+  'nav-link': true,
+  btn: true,
+  'btn-block': true,
+  'pl-3': true,
+  'text-left': true,
+  active: id === currentChannelId,
+});
 
 const ChatChannels = (props) => {
   const { t } = useTranslation();
-  const {
-    channels,
-    currentChannelId,
-    changeChannel,
-    modalOpen,
-  } = props;
+  const { channels, currentChannelId } = useSelector(({ channelInfo }) => channelInfo);
+  const { changeChannel, modalOpen } = props;
 
   const handleChangeChannel = (id) => () => {
     if (id !== currentChannelId) {
@@ -42,40 +48,18 @@ const ChatChannels = (props) => {
     modalOpen({ type: 'renameChannel', extra: { id } });
   };
 
-  const getButtonClasses = (id) => cn({
-    'nav-link': true,
-    btn: true,
-    'btn-block': true,
-    'pl-3': true,
-    'text-left': true,
-    active: id === currentChannelId,
-  });
-
-  const appendRemoveBtn = (id, removable) => (
-    removable ? (
-      <>
-        <button type="button" className="btn btn-link p-1" value={id} onClick={handleRenameChannel(id)}>
-          {editIcon}
-        </button>
-        <button type="button" className="btn btn-link ml-auto p-1" value={id} onClick={handleRemoveChannel(id)}>
-          {removeIcon}
-        </button>
-      </>
-    ) : null
-  );
-
   const channelsList = (
     <ul className="nav flex-column nav-pills nav-fill">
       {channels.map(({ id, name, removable }) => (
         <li key={id} className="nav-item" style={{ display: 'flex' }}>
           <button
             type="button"
-            className={getButtonClasses(id)}
+            className={getButtonClasses(id, currentChannelId)}
             onClick={handleChangeChannel(id)}
           >
             {name}
           </button>
-          {appendRemoveBtn(id, removable)}
+          {removable && renderChannelBtns(id, handleRenameChannel, handleRemoveChannel)}
         </li>
       ))}
     </ul>
@@ -99,4 +83,4 @@ const ChatChannels = (props) => {
   );
 };
 
-export default connect(mapStateToProps, actionCreators)(ChatChannels);
+export default connect()(ChatChannels);
