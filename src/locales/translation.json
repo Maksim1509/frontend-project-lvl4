@@ -3,6 +3,7 @@
    "Required": "This is required field",
    "Network Error": "Network error, check your internet connection and try again",
    "send": "SEND",
+   "sending": "Sending...",
    "add": "ADD",
    "addTitle": "Add new channel",
    "close": "CLOSE",

@@ -4,8 +4,10 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import io from 'socket.io-client';
 import gon from 'gon';
+import 'react-toastify/scss/main.scss';
 import 'bootstrap';
 import '../assets/application.scss';
 import './lib/i18n';
@@ -56,3 +58,4 @@ render(
   </Provider>,
   document.getElementById('chat'),
 );
+toast.configure();

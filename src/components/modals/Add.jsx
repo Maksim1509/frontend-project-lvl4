@@ -30,14 +30,10 @@ const Add = (props) => {
   const { useChannelActions } = asyncActions;
   const { addChannelRequest } = useChannelActions();
 
-  const handleAddChannel = async ({ channelName }, { resetForm, setErrors }) => {
-    try {
-      await addChannelRequest(channelName);
-      modalClose();
-      resetForm({ values: '' });
-    } catch (e) {
-      setErrors({ channelName: e.message });
-    }
+  const handleAddChannel = async ({ channelName }, { resetForm }) => {
+    await addChannelRequest(channelName);
+    modalClose();
+    resetForm({ values: '' });
   };
   const handleModalClose = () => modalClose();
 

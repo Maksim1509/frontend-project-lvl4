@@ -14,21 +14,16 @@ const actionCreators = {
 const Remove = (props) => {
   const { t } = useTranslation();
   const { modal, modalClose } = props;
-  const [error, setError] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
 
   const { useChannelActions } = asyncActions;
   const { removeChannelRequest } = useChannelActions();
 
   const handleRemoveChannel = async () => {
-    try {
-      setSubmitting(true);
-      await removeChannelRequest(modal.extra.id);
-      setSubmitting(false);
-      modalClose();
-    } catch (e) {
-      setError(e.message);
-    }
+    setSubmitting(true);
+    await removeChannelRequest(modal.extra.id);
+    setSubmitting(false);
+    modalClose();
   };
 
   return (
@@ -39,7 +34,6 @@ const Remove = (props) => {
       <Modal.Footer className="d-block">
         <Button variant="danger" disabled={isSubmitting} onClick={handleRemoveChannel}>{t('remove')}</Button>
         {isSubmitting && spiner}
-        {!!error && <div className="text-danger">{t(error)}</div>}
       </Modal.Footer>
     </Modal>
   );

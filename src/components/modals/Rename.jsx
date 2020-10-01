@@ -31,14 +31,10 @@ const Rename = (props) => {
 
   const handleModalClose = () => modalClose();
 
-  const handleRenameChannel = async ({ channelName }, { resetForm, setErrors }) => {
-    try {
-      await renameChannelRequest(modal.extra.id, channelName);
-      modalClose();
-      resetForm({ values: '' });
-    } catch (e) {
-      setErrors({ channelName: e.message });
-    }
+  const handleRenameChannel = async ({ channelName }, { resetForm }) => {
+    await renameChannelRequest(modal.extra.id, channelName);
+    modalClose();
+    resetForm({ values: '' });
   };
 
   return (

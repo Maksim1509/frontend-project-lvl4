@@ -1,7 +1,9 @@
 /* eslint-disable no-param-reassign */
 
 import { createAction, createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import axios from 'axios';
+import i18next from 'i18next';
 import routes from '../routes';
 
 const removeChannel = createAction('removeChannel');
@@ -32,7 +34,11 @@ const useSendMessageActions = () => {
         message, userName,
       },
     };
-    await axios.post(routes.channelMessagesPath(currentChannelId), { data });
+    try {
+      await axios.post(routes.channelMessagesPath(currentChannelId), { data });
+    } catch (e) {
+      toast.error(i18next.t(e.message));
+    }
   };
   return {
     sendMessage,

@@ -35,16 +35,12 @@ const NewMessageForm = (props) => {
   const { sendMessage } = useSendMessageActions();
   const { currentChannelId } = props;
 
-  const handleSendMessage = async ({ message }, { resetForm, setErrors }) => {
-    try {
-      await sendMessage({ currentChannelId, message, userName });
-      resetForm({ values: '' });
-    } catch (e) {
-      setErrors({ message: e.message });
-    }
+  const handleSendMessage = async ({ message }, { resetForm }) => {
+    await sendMessage({ currentChannelId, message, userName });
+    resetForm({ values: '' });
   };
 
-  const form = (
+  return (
     <Formik
       validate={validate}
       initialValues={{ message: '' }}
@@ -62,7 +58,7 @@ const NewMessageForm = (props) => {
           {isSubmitting ? (
             <button className="btn btn-primary" type="button" disabled>
               <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
-              Sending...
+              {t('sending')}
             </button>
           ) : <button className="btn btn-primary" type="submit">{t('send')}</button>}
           {errors.message ? <div className="invalid-feedback">{t(errors.message)}</div>
@@ -71,7 +67,6 @@ const NewMessageForm = (props) => {
       )}
     </Formik>
   );
-  return form;
 };
 
 export default connect(mapStateToProps)(NewMessageForm);
