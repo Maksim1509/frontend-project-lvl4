@@ -1,3 +1,5 @@
+import 'react-toastify/dist/ReactToastify.css';
+
 import React from 'react';
 import { render } from 'react-dom';
 import 'core-js/stable';
@@ -7,7 +9,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import io from 'socket.io-client';
 import gon from 'gon';
-import 'react-toastify/scss/main.scss';
 import 'bootstrap';
 import '../assets/application.scss';
 import './lib/i18n';
