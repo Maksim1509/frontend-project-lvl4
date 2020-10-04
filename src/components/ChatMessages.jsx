@@ -1,7 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-// import { connect } from 'react-redux';
-import connect from '../connect';
 
 const ChatMessages = () => {
   const сhannelMessages = useSelector((state) => {
@@ -22,4 +20,4 @@ const ChatMessages = () => {
   );
 };
 
-export default connect()(ChatMessages);
+export default ChatMessages;

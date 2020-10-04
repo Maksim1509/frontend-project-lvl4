@@ -1,15 +1,15 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
-import connect from '../../connect';
-import { asyncActions } from '../../slices';
+import { actions, asyncActions } from '../../slices';
 import { spiner } from '../utils';
 
-const Remove = (props) => {
+const Remove = () => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { modal } = useSelector((state) => state);
-  const { modalClose } = props;
+  const { modalClose } = actions;
   const [isSubmitting, setSubmitting] = React.useState(false);
 
   const { useChannelActions } = asyncActions;
@@ -19,11 +19,13 @@ const Remove = (props) => {
     setSubmitting(true);
     await removeChannelRequest(modal.extra.id);
     setSubmitting(false);
-    modalClose();
+    dispatch(modalClose());
   };
 
+  const handleModalClose = () => dispatch(modalClose());
+
   return (
-    <Modal show={modal.type === 'removeChannel'} onHide={modalClose}>
+    <Modal show={modal.type === 'removeChannel'} onHide={handleModalClose}>
       <Modal.Header closeButton>
         <Modal.Title>{t('removeTitle')}</Modal.Title>
       </Modal.Header>
@@ -35,4 +37,4 @@ const Remove = (props) => {
   );
 };
 
-export default connect()(Remove);
+export default Remove;

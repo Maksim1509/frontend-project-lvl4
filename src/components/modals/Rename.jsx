@@ -1,12 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
 import cn from 'classnames';
-import connect from '../../connect';
-import { asyncActions } from '../../slices';
-import validate from './validate';
+import { actions, asyncActions } from '../../slices';
+import { channelNameSchema } from '../../validate';
 import { spiner } from '../utils';
 
 const getFieldClasses = ({ channelName }) => cn({
@@ -14,29 +13,30 @@ const getFieldClasses = ({ channelName }) => cn({
   'is-invalid': !!channelName,
 });
 
-const Rename = (props) => {
+const Rename = () => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { modal } = useSelector((state) => state);
-  const { modalClose } = props;
+  const { modalClose } = actions;
   const { useChannelActions } = asyncActions;
   const { renameChannelRequest } = useChannelActions();
 
-  const handleModalClose = () => modalClose();
+  const handleModalClose = () => dispatch(modalClose());
 
   const handleRenameChannel = async ({ channelName }, { resetForm }) => {
     await renameChannelRequest(modal.extra.id, channelName);
-    modalClose();
+    dispatch(modalClose());
     resetForm({ values: '' });
   };
 
   return (
-    <Modal show={modal.type === 'renameChannel'} onHide={modalClose}>
+    <Modal show={modal.type === 'renameChannel'} onHide={handleModalClose}>
       <Modal.Header closeButton>
         <Modal.Title>{t('renameTitle')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
-          validate={validate}
+          validationSchema={channelNameSchema}
           initialValues={{ channelName: '' }}
           onSubmit={handleRenameChannel}
         >
@@ -62,4 +62,4 @@ const Rename = (props) => {
   );
 };
 
-export default connect()(Rename);
+export default Rename;

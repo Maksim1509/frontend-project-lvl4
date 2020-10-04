@@ -1,6 +1,7 @@
 {
    "channels": "Channels",
    "Required": "This is required field",
+   "wrong length": "Must be 3 to 20 characters", 
    "Network Error": "Network error, check your internet connection and try again",
    "send": "SEND",
    "sending": "Sending...",

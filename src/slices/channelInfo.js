@@ -6,13 +6,13 @@ import { toast } from 'react-toastify';
 import i18next from 'i18next';
 import routes from '../routes';
 
-const defaultId = 1;
+const defaultChannelId = 1;
 
 const channelSlice = createSlice({
   name: 'channelsInfo',
   initialState: {
     channels: [],
-    currentChannelId: defaultId,
+    currentChannelId: defaultChannelId,
   },
   reducers: {
     addChannel(state, action) {
@@ -22,7 +22,7 @@ const channelSlice = createSlice({
     removeChannel: (state, { payload }) => {
       const { id: removedChannelId } = payload;
       state.channels = state.channels.filter(({ id }) => id !== removedChannelId);
-      state.currentChannelId = defaultId;
+      state.currentChannelId = defaultChannelId;
     },
     renameChannel: (state, { payload }) => {
       const { data: { id, attributes: { name } } } = payload;

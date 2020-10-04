@@ -1,41 +1,42 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
 import { Formik, Field, Form } from 'formik';
 import cn from 'classnames';
-import connect from '../../connect';
-import { asyncActions } from '../../slices';
-import validate from './validate';
+import { actions, asyncActions } from '../../slices';
 import { spiner } from '../utils';
+import { channelNameSchema } from '../../validate';
 
 const getFieldClasses = ({ channelName }) => cn({
   'form-control': true,
   'is-invalid': !!channelName,
 });
 
-const Add = (props) => {
+const { modalClose } = actions;
+const { useChannelActions } = asyncActions;
+const { addChannelRequest } = useChannelActions();
+
+const Add = () => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { modal } = useSelector((state) => state);
-  const { useChannelActions } = asyncActions;
-  const { addChannelRequest } = useChannelActions();
-  const { modalClose } = props;
-
   const handleAddChannel = async ({ channelName }, { resetForm }) => {
     await addChannelRequest(channelName);
-    modalClose();
+    dispatch(modalClose());
     resetForm({ values: '' });
   };
-  const handleModalClose = () => modalClose();
+
+  const handleModalClose = () => dispatch(modalClose());
 
   return (
-    <Modal show={modal.type === 'addChannel'} onHide={modalClose}>
+    <Modal show={modal.type === 'addChannel'} onHide={handleModalClose}>
       <Modal.Header closeButton>
         <Modal.Title>{t('addTitle')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
-          validate={validate}
+          validationSchema={channelNameSchema}
           initialValues={{ channelName: '' }}
           onSubmit={handleAddChannel}
         >
@@ -61,4 +62,4 @@ const Add = (props) => {
   );
 };
 
-export default connect()(Add);
+export default Add;

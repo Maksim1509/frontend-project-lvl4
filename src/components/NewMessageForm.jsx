@@ -1,19 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Formik, Field, Form } from 'formik';
 import cn from 'classnames';
 import { UserNameContext } from '../userName-context';
 import { asyncActions } from '../slices';
-import connect from '../connect';
-
-const validate = (values) => {
-  const errors = {};
-  if (!values.message) {
-    errors.message = 'Required';
-  }
-  return errors;
-};
+import { inputMessageSchema } from '../validate';
 
 const getFieldClasses = ({ message }) => cn({
   'form-control': true,
@@ -35,9 +27,15 @@ const NewMessageForm = () => {
     resetForm({ values: '' });
   };
 
+  useEffect(() => {
+    const inputText = document.getElementById('message');
+    inputText.focus();
+  });
+
   return (
     <Formik
-      validate={validate}
+      validationSchema={inputMessageSchema}
+      validateOnBlur={false}
       initialValues={{ message: '' }}
       onSubmit={handleSendMessage}
     >
@@ -64,4 +62,4 @@ const NewMessageForm = () => {
   );
 };
 
-export default connect()(NewMessageForm);
+export default NewMessageForm;

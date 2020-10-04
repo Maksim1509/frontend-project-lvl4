@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
 import Add from './modals/Add';
 import Remove from './modals/Remove';
 import Rename from './modals/Rename';
-import connect from '../connect';
+import { actions } from '../slices';
 import { editIcon, removeIcon } from './utils';
 
 const renderChannelBtns = (id, renameFunc, removeFunc) => (
@@ -28,24 +28,25 @@ const getButtonClasses = (id, currentChannelId) => cn({
   active: id === currentChannelId,
 });
 
-const ChatChannels = (props) => {
+const ChatChannels = () => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { channels, currentChannelId } = useSelector(({ channelInfo }) => channelInfo);
-  const { changeChannel, modalOpen } = props;
+  const { changeChannel, modalOpen } = actions;
 
   const handleChangeChannel = (id) => () => {
     if (id !== currentChannelId) {
-      changeChannel({ id });
+      dispatch(changeChannel({ id }));
     }
   };
 
-  const handleModalOpen = (type, extra = {}) => () => modalOpen({ type, extra });
+  const handleModalOpen = (type, extra = {}) => () => dispatch(modalOpen({ type, extra }));
 
   const handleRemoveChannel = (id) => () => {
-    modalOpen({ type: 'removeChannel', extra: { id } });
+    dispatch(modalOpen({ type: 'removeChannel', extra: { id } }));
   };
   const handleRenameChannel = (id) => () => {
-    modalOpen({ type: 'renameChannel', extra: { id } });
+    dispatch(modalOpen({ type: 'renameChannel', extra: { id } }));
   };
 
   const channelsList = (
@@ -83,4 +84,4 @@ const ChatChannels = (props) => {
   );
 };
 
-export default connect()(ChatChannels);
+export default ChatChannels;
