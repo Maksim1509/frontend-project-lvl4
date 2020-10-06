@@ -23,8 +23,12 @@ const NewMessageForm = () => {
   const { channelInfo: { currentChannelId } } = useSelector((state) => state);
 
   const handleSendMessage = async ({ message }, { resetForm }) => {
-    await sendMessage({ currentChannelId, message, userName });
-    resetForm({ values: '' });
+    try {
+      await sendMessage({ currentChannelId, message, userName });
+      resetForm({ values: '' });
+    } catch (e) {
+      console.error(e.message);
+    }
   };
 
   useEffect(() => {

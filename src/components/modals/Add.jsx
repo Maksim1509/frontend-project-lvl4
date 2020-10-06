@@ -22,9 +22,13 @@ const Add = () => {
   const { t } = useTranslation();
   const { modal } = useSelector((state) => state);
   const handleAddChannel = async ({ channelName }, { resetForm }) => {
-    await addChannelRequest(channelName);
-    dispatch(modalClose());
-    resetForm({ values: '' });
+    try {
+      await addChannelRequest(channelName);
+      dispatch(modalClose());
+      resetForm({ values: '' });
+    } catch (e) {
+      console.error(e.message);
+    }
   };
 
   const handleModalClose = () => dispatch(modalClose());

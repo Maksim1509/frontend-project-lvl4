@@ -38,6 +38,7 @@ const useSendMessageActions = () => {
       await axios.post(routes.channelMessagesPath(currentChannelId), { data });
     } catch (e) {
       toast.error(i18next.t(e.message));
+      throw e;
     }
   };
   return {

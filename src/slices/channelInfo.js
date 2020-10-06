@@ -43,6 +43,7 @@ const useChannelActions = () => {
       await axios.post(routes.channelsPath(), { data });
     } catch (e) {
       toast.error(i18next.t(e.message));
+      throw e;
     }
   };
 
@@ -52,6 +53,7 @@ const useChannelActions = () => {
       await axios.delete(routes.channelPath(id), { params });
     } catch (e) {
       toast.error(i18next.t(e.message));
+      throw e;
     }
   };
 
@@ -61,6 +63,7 @@ const useChannelActions = () => {
       await axios.patch(routes.channelPath(id), { data }, { params: { id } });
     } catch (e) {
       toast.error(i18next.t(e.message));
+      throw e;
     }
   };
 

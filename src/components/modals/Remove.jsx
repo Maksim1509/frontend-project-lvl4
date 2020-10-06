@@ -16,10 +16,15 @@ const Remove = () => {
   const { removeChannelRequest } = useChannelActions();
 
   const handleRemoveChannel = async () => {
-    setSubmitting(true);
-    await removeChannelRequest(modal.extra.id);
-    setSubmitting(false);
-    dispatch(modalClose());
+    try {
+      setSubmitting(true);
+      await removeChannelRequest(modal.extra.id);
+      dispatch(modalClose());
+      setSubmitting(false);
+    } catch (e) {
+      setSubmitting(false);
+      console.error(e.message);
+    }
   };
 
   const handleModalClose = () => dispatch(modalClose());
