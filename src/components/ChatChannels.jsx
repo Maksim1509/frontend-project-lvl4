@@ -2,9 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
-import Add from './modals/Add';
-import Remove from './modals/Remove';
-import Rename from './modals/Rename';
+
 import { actions } from '../slices';
 import { editIcon, removeIcon } from './utils';
 
@@ -67,20 +65,15 @@ const ChatChannels = () => {
   );
 
   return (
-    <>
-      <div className="col-3 border-right">
-        <div className="d-flex mb-2">
-          <span>{t('channels')}</span>
-          <button type="button" className="btn btn-link p-0 ml-auto" onClick={handleModalOpen('addChannel')}>
-            +
-          </button>
-        </div>
-        {channelsList}
+    <div className="col-3 border-right">
+      <div className="d-flex mb-2">
+        <span>{t('channels')}</span>
+        <button type="button" className="btn btn-link p-0 ml-auto" onClick={handleModalOpen('addChannel')}>
+          +
+        </button>
       </div>
-      <Add />
-      <Remove />
-      <Rename />
-    </>
+      {channelsList}
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Formik, Field, Form } from 'formik';
@@ -16,6 +16,7 @@ const getFieldClasses = ({ message }) => cn({
 
 const NewMessageForm = () => {
   const userName = useContext(UserNameContext);
+  const inputRef = useRef(null);
   const { t } = useTranslation();
 
   const { useSendMessageActions } = asyncActions;
@@ -32,8 +33,7 @@ const NewMessageForm = () => {
   };
 
   useEffect(() => {
-    const inputText = document.getElementById('message');
-    inputText.focus();
+    inputRef.current.focus();
   });
 
   return (
@@ -51,6 +51,7 @@ const NewMessageForm = () => {
             name="message"
             className={getFieldClasses(errors)}
             readOnly={isSubmitting}
+            innerRef={inputRef}
           />
           {isSubmitting ? (
             <button className="btn btn-primary" type="button" disabled>

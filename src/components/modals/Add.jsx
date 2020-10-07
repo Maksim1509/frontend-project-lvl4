@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
@@ -32,6 +32,12 @@ const Add = () => {
   };
 
   const handleModalClose = () => dispatch(modalClose());
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (modal.type === 'addChannel') {
+      inputRef.current.focus();
+    }
+  });
 
   return (
     <Modal show={modal.type === 'addChannel'} onHide={handleModalClose}>
@@ -51,6 +57,7 @@ const Add = () => {
                 name="channelName"
                 className={getFieldClasses(errors)}
                 readOnly={isSubmitting}
+                innerRef={inputRef}
               />
               {!!errors.channelName && <div className="invalid-feedback">{t(errors.channelName)}</div>}
               <button type="submit" className="btn btn-primary mt-3" disabled={isSubmitting}>{t('add')}</button>

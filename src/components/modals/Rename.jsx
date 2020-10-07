@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
@@ -33,6 +33,13 @@ const Rename = () => {
     }
   };
 
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (modal.type === 'renameChannel') {
+      inputRef.current.focus();
+    }
+  });
+
   return (
     <Modal show={modal.type === 'renameChannel'} onHide={handleModalClose}>
       <Modal.Header closeButton>
@@ -51,6 +58,7 @@ const Rename = () => {
                 name="channelName"
                 className={getFieldClasses(errors)}
                 readOnly={isSubmitting}
+                innerRef={inputRef}
               />
               {!!errors.channelName && <div className="invalid-feedback">{t(errors.channelName)}</div>}
               <button type="submit" className="btn btn-primary mt-2" disabled={isSubmitting}>{t('rename')}</button>

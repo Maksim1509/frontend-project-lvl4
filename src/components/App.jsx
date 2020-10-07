@@ -3,6 +3,9 @@ import Rollbar from 'rollbar';
 import ChatChannels from './ChatChannels';
 import NewMessageForm from './NewMessageForm';
 import ChatMessages from './ChatMessages';
+import Add from './modals/Add';
+import Remove from './modals/Remove';
+import Rename from './modals/Rename';
 
 const App = () => {
   React.useState({
@@ -24,6 +27,9 @@ const App = () => {
           </div>
         </div>
       </div>
+      <Add />
+      <Remove />
+      <Rename />
     </div>
   );
 };
