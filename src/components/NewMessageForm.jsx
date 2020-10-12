@@ -9,7 +9,6 @@ import { inputMessageSchema } from '../validate';
 
 const getFieldClasses = ({ message }) => cn({
   'form-control': true,
-  'w-75': true,
   'mr-3': true,
   'is-invalid': !!message,
 });
@@ -44,8 +43,9 @@ const NewMessageForm = () => {
       onSubmit={handleSendMessage}
     >
       {({ isSubmitting, errors }) => (
-        <Form className="d-flex flex-wrap">
+        <Form className="d-flex flex-wrap align-items-center">
           <Field
+            as="textarea"
             type="text"
             id="message"
             name="message"
@@ -53,14 +53,14 @@ const NewMessageForm = () => {
             readOnly={isSubmitting}
             innerRef={inputRef}
           />
+          {errors.message ? <div className="invalid-feedback">{t(errors.message)}</div>
+            : null}
           {isSubmitting ? (
             <button className="btn btn-primary" type="button" disabled>
               <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
               {t('sending')}
             </button>
-          ) : <button className="btn btn-primary" type="submit">{t('send')}</button>}
-          {errors.message ? <div className="invalid-feedback">{t(errors.message)}</div>
-            : null}
+          ) : <button className="btn btn-primary mt-1" type="submit">{t('send')}</button>}
         </Form>
       )}
     </Formik>
