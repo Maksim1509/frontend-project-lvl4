@@ -40,7 +40,7 @@
     "classnames": "^2.2.6",
     "core-js": "^3.6.5",
     "css-loader": "^3.6.0",
-    "cssnano": "^4.1.10",
+    "cssnano": "^5.1.15",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "faker": "^4.1.0",
